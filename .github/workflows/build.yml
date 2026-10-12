@@ -20,5 +20,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
+      - name: Bootstrap Gradle and fix executable bit
+        run: |
+          chmod +x gradlew
+          ./gradlew --version || true
+          chmod +x "$HOME/.gradle/wrapper/dists/gradle-9.7.0-bin/bootstrap/bin/gradle"
       - name: Build with Gradle
-        run: chmod +x gradlew && ./gradlew build --no-daemon --console=plain
+        run: ./gradlew build --no-daemon --console=plain
