@@ -4,18 +4,26 @@
   "version": "${version}",
   "name": "ВМуткоин Обменник",
   "description": "Server-authoritative weekly resource exchange for vmtrade:vmcoin, restricted by per-block LuckPerms groups.",
-  "authors": ["PuzzleCh"],
+  "authors": [
+    "PuzzleCh"
+  ],
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
-    "main": ["com.puzzlechannel.vmexchange.VmExchangeMod"],
-    "client": ["com.puzzlechannel.vmexchange.client.VmExchangeClient"]
+    "main": [
+      "com.puzzlechannel.vmexchange.VmExchangeMod"
+    ],
+    "client": [
+      "com.puzzlechannel.vmexchange.client.VmExchangeClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": ">=26.2 <26.3",
     "fabric-api": ">=0.160.0+26.2",
-    "vmtrade": "*",
+    "vmtrade": "*"
+  },
+  "suggests": {
     "luckperms": ">=5.5.0"
   }
 }
