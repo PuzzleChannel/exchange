@@ -82,6 +82,6 @@ public final class VmExchangeData extends SavedData {
     }
 
     private static String exchangeKey(ResourceKey<Level> dimension, BlockPos pos) {
-        return dimension.location() + "@" + pos.getX() + "," + pos.getY() + "," + pos.getZ();
+        return dimension.identifier() + "@" + pos.getX() + "," + pos.getY() + "," + pos.getZ();
     }
 }
