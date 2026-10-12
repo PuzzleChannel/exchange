@@ -27,3 +27,10 @@ jobs:
           chmod +x "$HOME/.gradle/wrapper/dists/gradle-9.7.0-bin/bootstrap/bin/gradle"
       - name: Build with Gradle
         run: ./gradlew build --no-daemon --console=plain
+      - name: Upload distributable JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: vmcoin-exchange-1.0.0
+          path: build/libs/vmcoin-exchange-1.0.0.jar
+          if-no-files-found: error
+          retention-days: 30
