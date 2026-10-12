@@ -1,0 +1,13 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+// Do not set dependencyResolutionManagement.repositoriesMode to PREFER_SETTINGS here.
+// Fabric Loom adds its own local Minecraft/remapped-mod repositories to the project.
+// PREFER_SETTINGS silently ignores those repositories and breaks Minecraft dependency resolution.
+
+rootProject.name = 'vmcoin-exchange'

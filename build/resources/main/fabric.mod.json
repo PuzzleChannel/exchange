@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "vmexchange",
+  "version": "1.0.0",
+  "name": "ВМуткоин Обменник",
+  "description": "Server-authoritative weekly resource exchange for vmtrade:vmcoin.",
+  "authors": ["PuzzleCh"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.puzzlechannel.vmexchange.VmExchangeMod"],
+    "client": ["com.puzzlechannel.vmexchange.client.VmExchangeClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": ">=26.2 <26.3",
+    "fabric-api": ">=0.160.0+26.2",
+    "vmtrade": "*"
+  }
+}

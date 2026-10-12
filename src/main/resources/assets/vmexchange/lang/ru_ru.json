@@ -1,0 +1,20 @@
+{
+  "block.vmexchange.exchange": "ВМуткоин Обменник",
+  "item.vmexchange.exchange": "ВМуткоин Обменник",
+  "container.vmexchange.exchange": "ВМуткоин Обменник",
+  "vmexchange.exchange": "ОБМЕН",
+  "vmexchange.week": "Текущая неделя: %s",
+  "vmexchange.received": "Получено: %s / %s ВМуткоинов",
+  "vmexchange.price": "Текущий курс: %s ресурс(ов) → 1 ВМуткоин",
+  "vmexchange.next_price": "Следующий курс: %s ресурс(ов) → 1 ВМуткоин",
+  "vmexchange.limit_reached": "Недельный лимит исчерпан.",
+  "vmexchange.limit_finished": "Лимит закончился",
+  "vmexchange.next_week": "Следующий обмен будет доступен после начала новой недели.",
+  "vmexchange.no_material": "Этот предмет не принимается на этой неделе.",
+  "vmexchange.no_space": "В инвентаре недостаточно места для ВМуткоинов.",
+  "vmexchange.no_vmcoin": "Предмет ВМуткоин (vmtrade:vmcoin) недоступен.",
+  "vmexchange.inputs": "Ресурсы для обмена",
+  "vmexchange.result": "Результат",
+  "vmexchange.requirements": "Требуется для 1 ВМуткоина",
+  "vmexchange.received_short": "За неделю: %s / %s"
+}

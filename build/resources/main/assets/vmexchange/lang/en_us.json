@@ -1,0 +1,19 @@
+{
+  "block.vmexchange.exchange": "VMcoin Exchange",
+  "item.vmexchange.exchange": "VMcoin Exchange",
+  "container.vmexchange.exchange": "VMcoin Exchange",
+  "vmexchange.exchange": "Exchange",
+  "vmexchange.week": "Current week: %s",
+  "vmexchange.received": "Received: %s / %s VMcoins",
+  "vmexchange.price": "Current price: %s resource(s) → 1 VMcoin",
+  "vmexchange.next_price": "Next price: %s resource(s) → 1 VMcoin",
+  "vmexchange.limit_reached": "Weekly limit reached.",
+  "vmexchange.next_week": "Next exchange is available after the new week begins.",
+  "vmexchange.no_material": "This item is not accepted this week.",
+  "vmexchange.no_space": "Not enough inventory space for the VMcoin reward.",
+  "vmexchange.no_vmcoin": "VMcoin item (vmtrade:vmcoin) is unavailable.",
+  "vmexchange.inputs": "Resources to exchange",
+  "vmexchange.result": "Result",
+  "vmexchange.requirements": "Required for 1 VMCoin",
+  "vmexchange.received_short": "This week: %s / %s"
+}
