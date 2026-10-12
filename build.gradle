@@ -19,6 +19,9 @@ dependencies {
     // and Fabric API are regular Gradle implementation dependencies.
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Compile against the LuckPerms API; the server's LuckPerms mod provides it at runtime.
+    compileOnly 'net.luckperms:api:5.5'
 }
 
 processResources {

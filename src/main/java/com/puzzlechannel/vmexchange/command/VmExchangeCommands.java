@@ -2,15 +2,20 @@ package com.puzzlechannel.vmexchange.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import com.puzzlechannel.vmexchange.config.VmExchangeConfig;
 import com.puzzlechannel.vmexchange.data.VmExchangeManager;
+import com.puzzlechannel.vmexchange.data.LuckPermsGroupAccess;
 import com.puzzlechannel.vmexchange.network.VmExchangeNetworking;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import com.puzzlechannel.vmexchange.registry.ModBlocks;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
@@ -23,6 +28,18 @@ public final class VmExchangeCommands {
 
             root.then(Commands.literal("info")
                     .executes(ctx -> info(ctx.getSource().getPlayerOrException())));
+
+            root.then(Commands.literal("bindgroup")
+                    .then(Commands.argument("group", StringArgumentType.word())
+                            .executes(ctx -> bindGroup(
+                                    ctx.getSource().getPlayerOrException(),
+                                    StringArgumentType.getString(ctx, "group")))));
+
+            root.then(Commands.literal("unbindgroup")
+                    .executes(ctx -> unbindGroup(ctx.getSource().getPlayerOrException())));
+
+            root.then(Commands.literal("groupinfo")
+                    .executes(ctx -> groupInfo(ctx.getSource().getPlayerOrException())));
 
             root.then(Commands.literal("setmaterial")
                     .then(Commands.argument("slot", IntegerArgumentType.integer(1, 4))
@@ -124,6 +141,69 @@ public final class VmExchangeCommands {
 
             dispatcher.register(root);
         });
+    }
+
+    private static int bindGroup(ServerPlayer player, String requestedGroup) {
+        String group = requestedGroup.trim().toLowerCase(Locale.ROOT);
+        BlockPos pos = lookedAtExchange(player);
+        if (pos == null) {
+            player.sendSystemMessage(Component.literal(
+                    "Не вижу Обменник в радиусе 8 блоков. Наведите прицел на блок и повторите команду."));
+            return 0;
+        }
+
+        if (!LuckPermsGroupAccess.isAvailable()) {
+            player.sendSystemMessage(Component.literal("LuckPerms API недоступен. Проверьте установку LuckPerms на сервере."));
+            return 0;
+        }
+        if (!LuckPermsGroupAccess.groupExists(group)) {
+            player.sendSystemMessage(Component.literal(
+                    "Группа LuckPerms '" + group + "' не найдена. Проверьте имя группы."));
+            return 0;
+        }
+
+        VmExchangeManager.get(player.level().getServer())
+                .bindGroup(player.level().dimension(), pos, group);
+        player.sendSystemMessage(Component.literal(
+                "Обменник на " + pos.getX() + " " + pos.getY() + " " + pos.getZ()
+                        + " привязан к группе LuckPerms: " + group));
+        return 1;
+    }
+
+    private static int unbindGroup(ServerPlayer player) {
+        BlockPos pos = lookedAtExchange(player);
+        if (pos == null) {
+            player.sendSystemMessage(Component.literal(
+                    "Не вижу Обменник в радиусе 8 блоков. Наведите прицел на блок и повторите команду."));
+            return 0;
+        }
+        VmExchangeManager.get(player.level().getServer()).unbindGroup(player.level().dimension(), pos);
+        player.sendSystemMessage(Component.literal(
+                "Привязка группы удалена. Обменник закрыт для всех, пока вы не назначите новую группу."));
+        return 1;
+    }
+
+    private static int groupInfo(ServerPlayer player) {
+        BlockPos pos = lookedAtExchange(player);
+        if (pos == null) {
+            player.sendSystemMessage(Component.literal(
+                    "Не вижу Обменник в радиусе 8 блоков. Наведите прицел на блок и повторите команду."));
+            return 0;
+        }
+        String group = VmExchangeManager.get(player.level().getServer())
+                .exchangeGroup(player.level().dimension(), pos);
+        player.sendSystemMessage(Component.literal(
+                group == null || group.isBlank()
+                        ? "Этот Обменник не привязан к группе и закрыт для всех."
+                        : "Группа доступа этого Обменника: " + group));
+        return 1;
+    }
+
+    private static BlockPos lookedAtExchange(ServerPlayer player) {
+        var hit = player.pick(8.0D, 0.0F, false);
+        if (!(hit instanceof BlockHitResult blockHit) || hit.getType() != HitResult.Type.BLOCK) return null;
+        BlockPos pos = blockHit.getBlockPos();
+        return player.level().getBlockState(pos).is(ModBlocks.EXCHANGE) ? pos : null;
     }
 
     private static int info(ServerPlayer player) {

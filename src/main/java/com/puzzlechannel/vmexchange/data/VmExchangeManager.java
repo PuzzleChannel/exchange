@@ -3,12 +3,16 @@ package com.puzzlechannel.vmexchange.data;
 import com.puzzlechannel.vmexchange.config.VmExchangeConfig;
 import com.puzzlechannel.vmexchange.menu.VmExchangeMenu;
 import com.puzzlechannel.vmexchange.network.VmExchangeNetworking;
+import com.puzzlechannel.vmexchange.registry.ModBlocks;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
@@ -176,7 +180,35 @@ public final class VmExchangeManager {
     public int currentPrice(ServerPlayer player) { return VmExchangeConfig.get().priceFor(state(player).weeklyEarned()); }
     public List<String> materials() { return data.materials(); }
 
+    public String exchangeGroup(ResourceKey<Level> dimension, BlockPos pos) {
+        return data.exchangeGroup(dimension, pos);
+    }
+
+    public void bindGroup(ResourceKey<Level> dimension, BlockPos pos, String group) {
+        data.setExchangeGroup(dimension, pos.immutable(), group.toLowerCase(Locale.ROOT));
+    }
+
+    public void unbindGroup(ResourceKey<Level> dimension, BlockPos pos) {
+        data.removeExchangeGroup(dimension, pos);
+    }
+
+    public boolean hasExchangeAccess(ServerPlayer player, ResourceKey<Level> dimension, BlockPos pos) {
+        String requiredGroup = data.exchangeGroup(dimension, pos);
+        if (requiredGroup == null || requiredGroup.isBlank()) return false;
+
+        return LuckPermsGroupAccess.playerHasGroup(player, requiredGroup);
+    }
+
     public int exchange(ServerPlayer player, VmExchangeMenuAccess menu) {
+        if (menu.exchangePos() == null || menu.exchangeDimension() == null) return 0;
+        if (!player.level().dimension().equals(menu.exchangeDimension())
+                || !player.level().getBlockState(menu.exchangePos()).is(ModBlocks.EXCHANGE)
+                || !hasExchangeAccess(player, menu.exchangeDimension(), menu.exchangePos())) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "Доступ к этому Обменнику запрещён: группа LuckPerms не совпадает."));
+            return 0;
+        }
+
         VmExchangeConfig cfg = VmExchangeConfig.get();
         VmExchangeData.PlayerState ps = state(player);
         if (ps.weeklyEarned() >= cfg.weeklyLimit || menu.exchangeSlots() != 4 || data.materials().size() != 4) return 0;
@@ -233,5 +265,7 @@ public final class VmExchangeManager {
         int exchangeSlots();
         ItemStack stackInSlot(int slot);
         void removeFromSlot(int slot, int amount);
+        ResourceKey<Level> exchangeDimension();
+        BlockPos exchangePos();
     }
 }
