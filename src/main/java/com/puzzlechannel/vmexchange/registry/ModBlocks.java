@@ -9,6 +9,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
@@ -26,7 +27,12 @@ public final class ModBlocks {
             new BlockItem(EXCHANGE, new Item.Properties().useBlockDescriptionPrefix().setId(EXCHANGE_ITEM_KEY)));
 
     public static void initialize() {
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(entries -> entries.accept(EXCHANGE_ITEM));
+        // Deliberately provide the placeable block item in normal creative tabs.
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS)
+                .register(entries -> entries.accept(EXCHANGE_ITEM));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS)
+                .register(entries -> entries.accept(EXCHANGE_ITEM));
+        // No crafting recipe is registered for vmexchange:exchange; it is admin-placed only.
     }
 
     private ModBlocks() {}

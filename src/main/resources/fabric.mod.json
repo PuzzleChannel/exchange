@@ -3,7 +3,7 @@
   "id": "vmexchange",
   "version": "${version}",
   "name": "ВМуткоин Обменник",
-  "description": "Server-authoritative weekly resource exchange for vmtrade:vmcoin.",
+  "description": "Server-authoritative weekly resource exchange for vmtrade:vmcoin, restricted by per-block LuckPerms groups.",
   "authors": ["PuzzleCh"],
   "license": "MIT",
   "environment": "*",
@@ -15,6 +15,7 @@
     "fabricloader": ">=0.19.5",
     "minecraft": ">=26.2 <26.3",
     "fabric-api": ">=0.160.0+26.2",
-    "vmtrade": "*"
+    "vmtrade": "*",
+    "luckperms": ">=5.5.0"
   }
 }
