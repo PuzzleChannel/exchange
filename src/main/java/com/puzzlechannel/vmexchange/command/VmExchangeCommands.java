@@ -2,6 +2,7 @@ package com.puzzlechannel.vmexchange.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import com.puzzlechannel.vmexchange.config.VmExchangeConfig;
 import com.puzzlechannel.vmexchange.data.VmExchangeManager;
 import com.puzzlechannel.vmexchange.data.LuckPermsGroupAccess;
