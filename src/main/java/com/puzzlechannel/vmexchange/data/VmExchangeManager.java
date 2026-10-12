@@ -4,7 +4,6 @@ import com.puzzlechannel.vmexchange.config.VmExchangeConfig;
 import com.puzzlechannel.vmexchange.menu.VmExchangeMenu;
 import com.puzzlechannel.vmexchange.network.VmExchangeNetworking;
 import com.puzzlechannel.vmexchange.registry.ModBlocks;
-import net.luckperms.api.LuckPermsProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -197,15 +196,7 @@ public final class VmExchangeManager {
         String requiredGroup = data.exchangeGroup(dimension, pos);
         if (requiredGroup == null || requiredGroup.isBlank()) return false;
 
-        try {
-            var user = LuckPermsProvider.get().getUserManager().getUser(player.getUUID());
-            if (user == null) return false;
-            if (user.getPrimaryGroup().equalsIgnoreCase(requiredGroup)) return true;
-            return user.getInheritedGroups(user.getQueryOptions()).stream()
-                    .anyMatch(group -> group.getName().equalsIgnoreCase(requiredGroup));
-        } catch (IllegalStateException exception) {
-            return false;
-        }
+        return LuckPermsGroupAccess.playerHasGroup(player, requiredGroup);
     }
 
     public int exchange(ServerPlayer player, VmExchangeMenuAccess menu) {
