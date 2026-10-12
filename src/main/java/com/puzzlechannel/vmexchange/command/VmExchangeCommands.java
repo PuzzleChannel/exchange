@@ -4,9 +4,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.puzzlechannel.vmexchange.config.VmExchangeConfig;
 import com.puzzlechannel.vmexchange.data.VmExchangeManager;
+import com.puzzlechannel.vmexchange.data.LuckPermsGroupAccess;
 import com.puzzlechannel.vmexchange.network.VmExchangeNetworking;
 import com.puzzlechannel.vmexchange.registry.ModBlocks;
-import net.luckperms.api.LuckPermsProvider;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
@@ -151,14 +151,13 @@ public final class VmExchangeCommands {
             return 0;
         }
 
-        try {
-            if (LuckPermsProvider.get().getGroupManager().getGroup(group) == null) {
-                player.sendSystemMessage(Component.literal(
-                        "Группа LuckPerms '" + group + "' не найдена. Проверьте имя группы."));
-                return 0;
-            }
-        } catch (IllegalStateException exception) {
+        if (!LuckPermsGroupAccess.isAvailable()) {
             player.sendSystemMessage(Component.literal("LuckPerms API недоступен. Проверьте установку LuckPerms на сервере."));
+            return 0;
+        }
+        if (!LuckPermsGroupAccess.groupExists(group)) {
+            player.sendSystemMessage(Component.literal(
+                    "Группа LuckPerms '" + group + "' не найдена. Проверьте имя группы."));
             return 0;
         }
 
